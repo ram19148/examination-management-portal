@@ -1,0 +1,131 @@
+<!-- templates/admin/exams.html -->
+<!-- ==============================================================================
+     Naya exam schedule karna (dual time-windows ke sath) aur existing exams ko list karna.
+     ============================================================================== -->
+{% extends 'base.html' %}
+{% block title %}Schedule Examination - Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Form: Naya Exam Schedule configure karne ke liye -->
+    <div class="col-lg-5 mb-4">
+        <div class="card card-modern">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">📝 Schedule Examination</h5>
+                <form method="POST" action="{{ url_for('admin_exams') }}">
+                    <!-- Course Dropdown -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Select Course</label>
+                        <select name="course_id" class="form-select" required>
+                            <option value="" disabled selected>Choose target course...</option>
+                            {% for c in courses %}
+                                <option value="{{ c.id }}">{{ c.course_code }} - {{ c.course_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Exam Name -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Examination Name</label>
+                        <input type="text" name="name" class="form-control" required placeholder="e.g. End-Term Project Demo & Viva">
+                    </div>
+
+                    <!-- Exam Type & Marks Meta -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Format</label>
+                            <select name="exam_type" class="form-select" required>
+                                <option value="Viva">Viva</option>
+                                <option value="Project Demo">Project Demo</option>
+                                <option value="Practical">Practical</option>
+                                <option value="Assessment">Assessment</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Duration (m)</label>
+                            <input type="number" name="duration_minutes" class="form-control" value="20" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Max Marks</label>
+                            <input type="number" name="max_marks" class="form-control" value="100" required>
+                        </div>
+                    </div>
+
+                    <!-- Window 1: Slot Creation Window (Examiner ke liye) -->
+                    <div class="p-3 bg-light rounded mb-3 border">
+                        <h6 class="fw-bold text-primary mb-2 small text-uppercase">1. Slot Creation Window (Examiner)</h6>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label class="small text-muted">Window Start</label>
+                                <input type="datetime-local" name="slot_creation_start" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted">Window End</label>
+                                <input type="datetime-local" name="slot_creation_end" class="form-control form-control-sm" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Window 2: Slot Booking Window (Student ke liye) -->
+                    <div class="p-3 bg-light rounded mb-3 border">
+                        <h6 class="fw-bold text-success mb-2 small text-uppercase">2. Slot Booking Window (Student)</h6>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label class="small text-muted">Booking Open</label>
+                                <input type="datetime-local" name="slot_booking_start" class="form-control form-control-sm" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="small text-muted">Booking Close</label>
+                                <input type="datetime-local" name="slot_booking_end" class="form-control form-control-sm" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-gradient w-100 fw-semibold">Publish Examination</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table: Sabhi Scheduled Exams ki list -->
+    <div class="col-lg-7">
+        <div class="card card-modern">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">📋 Scheduled Examinations</h5>
+                {% if exams %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Exam Title</th>
+                                    <th>Course</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for exam in exams %}
+                                    <tr>
+                                        <td>
+                                            <div class="fw-bold">{{ exam.name }}</div>
+                                            <small class="text-muted">{{ exam.exam_type }} | {{ exam.duration_minutes }} Min | Max: {{ exam.max_marks }}</small>
+                                        </td>
+                                        <td><span class="badge bg-secondary">{{ exam.course.course_code }}</span></td>
+                                        <td><span class="badge bg-primary">{{ exam.status }}</span></td>
+                                        <td class="text-end">
+                                            <a href="{{ url_for('edit_exam', exam_id=exam.id) }}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
+                                            <a href="{{ url_for('delete_exam', exam_id=exam.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Kya aap is exam aur iske slots ko delete karna chahte hain?');">Delete</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-0">Abhi tak koi examination schedule nahi hua hai.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

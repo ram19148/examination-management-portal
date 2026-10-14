@@ -1,0 +1,62 @@
+<!-- templates/examiner/create_slot.html -->
+<!-- ==============================================================================
+     Examiner dwara examination slot create karne ka form.
+     ============================================================================== -->
+{% extends 'base.html' %}
+{% block title %}Create Slot - Examiner{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-md-6">
+        <div class="card card-modern">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-1">➕ Create Examination Slot</h4>
+                <p class="text-muted small mb-4">Slot keval Admin dwara nirdharit timeline window ke dauran hi banaya ja sakta hai.</p>
+
+                <form method="POST" action="{{ url_for('create_slot') }}">
+                    <!-- Select Examination -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Select Examination</label>
+                        <select name="examination_id" class="form-select" required>
+                            <option value="" disabled selected>Target examination chunein...</option>
+                            {% for exam in exams %}
+                                <option value="{{ exam.id }}">{{ exam.course.course_code }} - {{ exam.name }} ({{ exam.exam_type }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Slot Date -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Date</label>
+                        <input type="date" name="date" class="form-control" required>
+                    </div>
+
+                    <!-- Slot Timing -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Start Time</label>
+                            <input type="time" name="start_time" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">End Time</label>
+                            <input type="time" name="end_time" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Student Capacity -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Maximum Student Capacity</label>
+                        <input type="number" name="capacity" class="form-control" value="1" min="1" max="10" required>
+                        <small class="text-muted">Ek slot mein kitne student appear ho sakte hain (Viva ke liye standard capacity 1 hoti hai).</small>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary-gradient flex-grow-1">Save Slot</button>
+                        <a href="{{ url_for('examiner_dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

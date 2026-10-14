@@ -1,0 +1,102 @@
+<!-- templates/examiner/dashboard.html -->
+<!-- ==============================================================================
+     Examiner Dashboard: Assigned slots, booked candidates, evaluate button,
+     aur agar booked_count == 0 hai toh slot edit/delete controls.
+     ============================================================================== -->
+{% extends 'base.html' %}
+{% block title %}Examiner Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-0">Examiner Dashboard</h2>
+        <p class="text-muted small">Aapke slots, registered students aur evaluation center.</p>
+    </div>
+    <a href="{{ url_for('create_slot') }}" class="btn btn-primary-gradient fw-semibold">➕ Create New Slot</a>
+</div>
+
+{% if slots %}
+    <!-- Har slot ko alag card mein display kiya ja raha hai -->
+    {% for slot in slots %}
+        <div class="card card-modern mb-4">
+            <!-- Slot Header Details -->
+            <div class="card-header bg-light d-flex justify-content-between align-items-center py-3">
+                <div>
+                    <span class="badge bg-secondary me-2">{{ slot.examination.course.course_code }}</span>
+                    <strong class="fs-5">{{ slot.examination.name }}</strong>
+                    <span class="text-muted small ms-2">({{ slot.examination.exam_type }})</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-info text-dark">
+                        {{ slot.date.strftime('%d %b %Y') }} | {{ slot.start_time.strftime('%I:%M %p') }} - {{ slot.end_time.strftime('%I:%M %p') }}
+                    </span>
+                    <span class="badge {{ 'bg-success' if slot.available_seats > 0 else 'bg-danger' }}">
+                        Seats: {{ slot.booked_count }} / {{ slot.capacity }}
+                    </span>
+                    
+                    <!-- Business Rule: Slot sirf tabhi edit/delete ho sakta hai jab booked_count == 0 ho -->
+                    {% if slot.booked_count == 0 %}
+                        <a href="{{ url_for('edit_slot', slot_id=slot.id) }}" class="btn btn-sm btn-outline-primary py-0">Edit</a>
+                        <a href="{{ url_for('delete_slot', slot_id=slot.id) }}" class="btn btn-sm btn-outline-danger py-0" onclick="return confirm('Kya aap yeh empty slot delete karna chahte hain?');">Delete</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Booked Students Table inside the Slot -->
+            <div class="card-body p-0">
+                {% if slot.bookings %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="ps-4">Student Name</th>
+                                    <th>Roll Number</th>
+                                    <th>Status</th>
+                                    <th class="text-end pe-4">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for b in slot.bookings %}
+                                    {% if b.status != 'Cancelled' %}
+                                        <tr>
+                                            <td class="ps-4 fw-bold">{{ b.student.full_name }}</td>
+                                            <td><code>{{ b.student.username }}</code></td>
+                                            <td>
+                                                {% if b.status == 'Completed' %}
+                                                    <span class="badge bg-success">Evaluated (Score: {{ b.evaluation.total_marks }})</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning text-dark">Pending Evaluation</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                {% if b.status == 'Booked' %}
+                                                    <a href="{{ url_for('evaluate_student', booking_id=b.id) }}" class="btn btn-sm btn-primary fw-semibold">
+                                                        Evaluate Student
+                                                    </a>
+                                                {% else %}
+                                                    <button class="btn btn-sm btn-outline-success" disabled>Completed</button>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="p-3 text-center text-muted small">
+                        Is slot ke liye abhi kisi student ne booking nahi ki hai (aap ise upar diye gaye button se edit ya delete kar sakte hain).
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="card card-modern p-5 text-center">
+        <h5 class="text-muted">Aapne abhi tak koi examination slot create nahi kiya hai.</h5>
+        <div class="mt-3">
+            <a href="{{ url_for('create_slot') }}" class="btn btn-primary-gradient">Pehla Slot Banayein</a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

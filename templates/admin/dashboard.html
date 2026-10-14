@@ -1,0 +1,160 @@
+<!-- templates/admin/dashboard.html -->
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-0">Admin Dashboard</h2>
+        <p class="text-muted small">System Overview & Central Search Interface</p>
+    </div>
+</div>
+
+<!-- ==========================================================================
+     GLOBAL SEARCH BAR: Students, Examiners, Exams ya Booking ID search karna
+     ========================================================================== -->
+<div class="card card-modern p-3 mb-4">
+    <form method="GET" action="{{ url_for('admin_dashboard') }}" class="row g-2">
+        <div class="col-md-10">
+            <input type="text" name="search" class="form-control" value="{{ search_query }}" placeholder="Search students, examiners, examinations or booking ID (e.g. 23f2003167, CS101, Viva, 1)...">
+        </div>
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-primary-gradient fw-semibold">Search Portal</button>
+        </div>
+    </form>
+</div>
+
+<!-- ==========================================================================
+     SEARCH RESULTS BLOCK: Sirf tabhi render hoga jab user search perform karega
+     ========================================================================== -->
+{% if search_query %}
+    <div class="card card-modern p-4 mb-4 border-primary">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">🔍 Search Results for "{{ search_query }}"</h5>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-sm btn-outline-secondary">Clear Search</a>
+        </div>
+
+        {% if search_results.users or search_results.exams or search_results.courses or search_results.bookings %}
+            <!-- Matching Users -->
+            {% if search_results.users %}
+                <h6 class="fw-bold text-primary mt-2">Matching Users:</h6>
+                <ul class="list-group mb-3">
+                    {% for u in search_results.users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ u.full_name }}</strong> ({{ u.username }}) - {{ u.email }}
+                            </div>
+                            <span class="badge bg-secondary text-uppercase">{{ u.role }} ({{ u.status }})</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <!-- Matching Examinations -->
+            {% if search_results.exams %}
+                <h6 class="fw-bold text-success mt-2">Matching Examinations:</h6>
+                <ul class="list-group mb-3">
+                    {% for e in search_results.exams %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ e.name }}</strong> ({{ e.exam_type }}) - {{ e.course.course_code }}
+                            </div>
+                            <a href="{{ url_for('edit_exam', exam_id=e.id) }}" class="btn btn-sm btn-outline-primary">Edit Exam</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <!-- Matching Bookings -->
+            {% if search_results.bookings %}
+                <h6 class="fw-bold text-danger mt-2">Matching Bookings:</h6>
+                <ul class="list-group mb-3">
+                    {% for b in search_results.bookings %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                Booking <strong>#BK-{{ b.id }}</strong>: {{ b.student.full_name }} for {{ b.slot.examination.name }}
+                            </div>
+                            <span class="badge bg-primary">{{ b.status }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-warning mb-0">Koi matching record nahi mila.</div>
+        {% endif %}
+    </div>
+{% endif %}
+
+<!-- ==========================================================================
+     METRICS CARDS: System summary metrics display
+     ========================================================================== -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4 col-lg-2">
+        <div class="card card-modern text-center p-3 border-start border-primary border-4">
+            <h6 class="text-muted small text-uppercase">Courses</h6>
+            <h3 class="fw-bold text-primary mb-0">{{ stats.courses }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2">
+        <div class="card card-modern text-center p-3 border-start border-success border-4">
+            <h6 class="text-muted small text-uppercase">Exams</h6>
+            <h3 class="fw-bold text-success mb-0">{{ stats.exams }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2">
+        <div class="card card-modern text-center p-3 border-start border-info border-4">
+            <h6 class="text-muted small text-uppercase">Examiners</h6>
+            <h3 class="fw-bold text-info mb-0">{{ stats.examiners }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2">
+        <div class="card card-modern text-center p-3 border-start border-warning border-4">
+            <h6 class="text-muted small text-uppercase">Students</h6>
+            <h3 class="fw-bold text-warning mb-0">{{ stats.students }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2">
+        <div class="card card-modern text-center p-3 border-start border-secondary border-4">
+            <h6 class="text-muted small text-uppercase">Slots</h6>
+            <h3 class="fw-bold text-secondary mb-0">{{ stats.slots }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-2">
+        <div class="card card-modern text-center p-3 border-start border-danger border-4">
+            <h6 class="text-muted small text-uppercase">Bookings</h6>
+            <h3 class="fw-bold text-danger mb-0">{{ stats.bookings }}</h3>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================================================
+     MODULE ACCESS NAVIGATION TILES
+     ========================================================================== -->
+<div class="row g-3">
+    <div class="col-md-6 col-lg-3">
+        <a href="{{ url_for('admin_courses') }}" class="card card-modern p-4 text-decoration-none text-dark h-100 hover-card">
+            <h5 class="fw-bold">📚 Manage Courses</h5>
+            <p class="text-muted small mb-0">Create, edit, or archive academic courses.</p>
+        </a>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <a href="{{ url_for('admin_exams') }}" class="card card-modern p-4 text-decoration-none text-dark h-100 hover-card">
+            <h5 class="fw-bold">📝 Schedule Exams</h5>
+            <p class="text-muted small mb-0">Configure exams, rubrics, and booking windows.</p>
+        </a>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <a href="{{ url_for('admin_examiners') }}" class="card card-modern p-4 text-decoration-none text-dark h-100 hover-card">
+            <h5 class="fw-bold">👨‍🏫 Examiner Approvals</h5>
+            <p class="text-muted small mb-0">Approve pending examiner requests or deactivate.</p>
+        </a>
+    </div>
+    <div class="col-md-6 col-lg-3">
+        <a href="{{ url_for('admin_bookings') }}" class="card card-modern p-4 text-decoration-none text-dark h-100 hover-card">
+            <h5 class="fw-bold">📅 View All Bookings</h5>
+            <p class="text-muted small mb-0">Audit bookings, reschedule, or reassign examiners.</p>
+        </a>
+    </div>
+</div>
+{% endblock %}

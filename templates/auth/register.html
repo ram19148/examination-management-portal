@@ -1,0 +1,75 @@
+<!-- templates/auth/register.html -->
+{% extends 'base.html' %}
+{% block title %}Create Account - Portal Registration{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card card-modern overflow-hidden">
+            <!-- Emerald Gradient Header for Registration Form -->
+            <div class="auth-header" style="background: linear-gradient(135deg, #0f766e 0%, #0d9488 100%);">
+                <div class="display-6 mb-2">📝</div>
+                <h4 class="fw-bold mb-1">Create an Account</h4>
+                <p class="small mb-0 opacity-75">Register as Student or Examiner</p>
+            </div>
+
+            <!-- Registration Form Body -->
+            <div class="card-body p-4 p-md-5">
+                <form method="POST" action="{{ url_for('register') }}">
+                    <!-- Role Selector: Student vs Examiner -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">Select Role</label>
+                        <select name="role" class="form-select border-primary" required>
+                            <option value="student" selected>🎓 Student (Immediate Self-Registration)</option>
+                            <option value="examiner">👨‍🏫 Examiner (Requires Admin Approval)</option>
+                        </select>
+                    </div>
+
+                    <!-- Personal Details: Name & Username -->
+                    <div class="row g-3">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-secondary small text-uppercase">Full Name</label>
+                            <input type="text" name="full_name" class="form-control" placeholder="e.g. Ram Krishna" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-semibold text-secondary small text-uppercase">Username / Roll No</label>
+                            <input type="text" name="username" class="form-control" placeholder="e.g. 23f2003167" required>
+                        </div>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="name@study.iitm.ac.in" required>
+                    </div>
+
+                    <!-- Department (Examiner Specific) -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">Department (For Examiners)</label>
+                        <input type="text" name="department" class="form-control" placeholder="e.g. Data Science & Applications">
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Create strong password" minlength="6" required>
+                    </div>
+
+                    <!-- Action Button -->
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-success py-2 fw-semibold" style="border-radius: 8px;">
+                            Complete Registration →
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center pt-2">
+                    <span class="text-muted small">Already registered?</span>
+                    <a href="{{ url_for('login') }}" class="fw-semibold text-decoration-none ms-1">Sign in here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

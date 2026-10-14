@@ -1,0 +1,62 @@
+<!-- templates/student/results.html -->
+<!-- ==============================================================================
+     Published scorecard, marks breakdown, examiner details, aur feedback.
+     ============================================================================== -->
+{% extends 'base.html' %}
+{% block title %}My Results & Scorecard{% endblock %}
+
+{% block content %}
+<div class="card card-modern p-4 mb-4">
+    <div class="d-flex align-items-center">
+        <span class="display-6 me-3">📊</span>
+        <div>
+            <h3 class="fw-bold mb-0">Examination Scorecard & Feedback</h3>
+            <p class="text-muted small mb-0">Faculty dwara publish kiye gaye official results aur feedback report.</p>
+        </div>
+    </div>
+</div>
+
+{% if evaluations %}
+    <div class="row g-4">
+        {% for ev in evaluations %}
+            <div class="col-lg-6">
+                <div class="card card-modern h-100 overflow-hidden border-top border-success border-4">
+                    <div class="card-body p-4">
+                        <!-- Exam & Status Header -->
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-secondary">{{ ev.booking.slot.examination.course.course_code }}</span>
+                            <span class="badge bg-success">Status: Published</span>
+                        </div>
+                        
+                        <h4 class="fw-bold mb-1">{{ ev.booking.slot.examination.name }}</h4>
+                        <p class="text-muted small mb-3">Evaluator: {{ ev.examiner.full_name }}</p>
+
+                        <!-- Total Score Banner -->
+                        <div class="p-3 bg-light rounded-3 text-center mb-3 border">
+                            <div class="text-uppercase small text-muted fw-bold mb-1">Total Marks Scored</div>
+                            <h2 class="fw-bold text-success mb-0">{{ ev.total_marks }} <span class="fs-5 text-muted">/ {{ ev.booking.slot.examination.max_marks }}</span></h2>
+                        </div>
+
+                        <!-- Examiner Qualitative Remarks -->
+                        <div class="mb-3">
+                            <label class="fw-bold small text-secondary text-uppercase">Examiner Remarks:</label>
+                            <div class="p-3 bg-white border rounded text-dark fst-italic">
+                                "{{ ev.remarks or 'Good effort. Keep improving!' }}"
+                            </div>
+                        </div>
+
+                        <div class="text-muted small">
+                            Exam Date: {{ ev.booking.slot.date.strftime('%d %b %Y') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card card-modern p-5 text-center">
+        <h5 class="text-muted">Abhi tak aapka koi result publish nahi hua hai.</h5>
+        <p class="small text-muted">Examiner dwara evaluation complete hone ke baad yahan scorecard display hoga.</p>
+    </div>
+{% endif %}
+{% endblock %}

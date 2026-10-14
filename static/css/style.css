@@ -1,0 +1,168 @@
+/* ==============================================================================
+   static/css/style.css
+   Examination Management Portal (EMP) - Production Theme
+   Clean, accessible, Bootstrap 5 compatible modern stylesheets.
+   ============================================================================== */
+
+/* ------------------------------------------------------------------------------
+   1. CSS VARIABLES (Theme Colors aur Design Tokens)
+   Yahan sabhi colors aur shadows define kiye gaye hain taaki UI consistent rahe.
+   ------------------------------------------------------------------------------ */
+:root {
+    --primary-color: #1e3a8a;       /* Deep Academic Navy Blue */
+    --accent-color: #2563eb;        /* Vibrant Royal Blue */
+    --accent-hover: #1d4ed8;
+    --success-accent: #0f766e;      /* Emerald Green */
+    --bg-slate: #f8fafc;            /* Clean light background */
+    --card-border: #e2e8f0;         /* Soft subtle border */
+    --text-primary: #0f172a;        /* High contrast readable text */
+    --text-secondary: #64748b;      /* Muted subtitles */
+}
+
+/* ------------------------------------------------------------------------------
+   2. GLOBAL LAYOUT (Full viewport height aur clean typography)
+   ------------------------------------------------------------------------------ */
+body {
+    background-color: var(--bg-slate);
+    font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ------------------------------------------------------------------------------
+   3. MODERN NAVBAR (Top brand bar with dynamic gradient)
+   ------------------------------------------------------------------------------ */
+.navbar-custom {
+    /* Gradient: Deep slate se navy blue ki taraf */
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-size: 1.25rem;
+}
+
+.nav-link {
+    font-weight: 500;
+    transition: color 0.2s ease-in-out;
+}
+
+/* ------------------------------------------------------------------------------
+   4. CARDS & ELEVATION (Modern shadow effects with hover animation)
+   ------------------------------------------------------------------------------ */
+.card, .card-modern {
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover effect: Card halka sa upar uthega aur shadow gahri hogi */
+.card:hover, .card-modern:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+}
+
+.hover-card:hover {
+    transform: translateY(-3px);
+}
+
+/* ------------------------------------------------------------------------------
+   5. AUTHENTICATION CARDS (Login & Registration header banner)
+   ------------------------------------------------------------------------------ */
+.auth-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    color: #ffffff;
+    border-radius: 11px 11px 0 0;
+    padding: 24px;
+    text-align: center;
+}
+
+/* ------------------------------------------------------------------------------
+   6. FORM CONTROLS (Input fields with accessible focus ring)
+   ------------------------------------------------------------------------------ */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 1.5px solid #cbd5e1;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Focus state: Blue glow effect */
+.form-control:focus, .form-select:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ------------------------------------------------------------------------------
+   7. BUTTON STYLING (Gradient buttons with click effect)
+   ------------------------------------------------------------------------------ */
+.btn-primary-gradient {
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 18px;
+    transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary-gradient:hover {
+    opacity: 0.92;
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+/* ------------------------------------------------------------------------------
+   8. DATA TABLES (Clean, readable enterprise table layout)
+   ------------------------------------------------------------------------------ */
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    background-color: #f8fafc;
+    border-bottom: 2px solid var(--card-border);
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* ------------------------------------------------------------------------------
+   9. BADGES & NOTIFICATIONS
+   ------------------------------------------------------------------------------ */
+.badge {
+    padding: 0.45em 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    border-radius: 6px;
+}
+
+.badge-role {
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.modal-content {
+    border-radius: 14px;
+    border: none;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+.alert {
+    border-radius: 8px;
+    border: none;
+}

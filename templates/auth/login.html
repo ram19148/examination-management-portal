@@ -1,0 +1,54 @@
+<!-- templates/auth/login.html -->
+{% extends 'base.html' %}
+{% block title %}Sign In - Portal Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-md-6 col-lg-5 col-xl-4">
+        <div class="card card-modern overflow-hidden">
+            <!-- Modern Header Banner with Icon -->
+            <div class="auth-header">
+                <div class="display-6 mb-2">🔐</div>
+                <h4 class="fw-bold mb-1">Welcome Back</h4>
+                <p class="small mb-0 opacity-75">Sign in to access your portal</p>
+            </div>
+
+            <!-- Login Form Body -->
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('login') }}">
+                    <!-- Username Input -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">Username / ID</label>
+                        <input type="text" name="username" class="form-control" placeholder="Enter username" required autofocus>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary-gradient py-2">
+                            Sign In to Portal →
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Registration Redirect Link -->
+                <div class="text-center pt-2">
+                    <span class="text-muted small">Don't have an account?</span>
+                    <a href="{{ url_for('register') }}" class="fw-semibold text-decoration-none ms-1">Register here</a>
+                </div>
+
+                <!-- Recruiter / Viva Demo Helper Box -->
+                <div class="mt-4 p-3 bg-light rounded-3 border text-center">
+                    <div class="text-muted small fw-bold mb-1">Admin Demo Credentials:</div>
+                    <code class="small text-dark">admin / Admin@IITM2026</code>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+<!-- templates/student/profile.html -->
+<!-- ==============================================================================
+     Student Profile Management: Name, Email, aur Password update.
+     ============================================================================== -->
+{% extends 'base.html' %}
+{% block title %}My Profile - Student{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-md-6">
+        <div class="card card-modern overflow-hidden">
+            <!-- Header Banner -->
+            <div class="auth-header" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+                <div class="display-6 mb-2">👤</div>
+                <h4 class="fw-bold mb-1">Student Profile</h4>
+                <p class="small mb-0 opacity-75">Apni personal profile details aur password update karein</p>
+            </div>
+
+            <!-- Profile Form Body -->
+            <div class="card-body p-4 p-md-5">
+                <form method="POST" action="{{ url_for('student_profile') }}">
+                    <!-- Username (Locked) -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">Username / Roll No</label>
+                        <input type="text" class="form-control bg-light" value="{{ user.username }}" readonly disabled>
+                        <small class="text-muted">Roll number institute dwara assigned hai aur change nahi ho sakta.</small>
+                    </div>
+
+                    <!-- Full Name -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">Full Name</label>
+                        <input type="text" name="full_name" class="form-control" value="{{ user.full_name }}" required>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">Email Address</label>
+                        <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
+                    </div>
+
+                    <!-- Optional Password Change -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold text-secondary small text-uppercase">New Password (Optional)</label>
+                        <input type="password" name="password" class="form-control" placeholder="Naya password tabhi enter karein jab badalna ho">
+                        <small class="text-muted">Password nahi badalna ho toh ise blank chhod dein.</small>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary-gradient py-2 fw-semibold">
+                            Update Profile Details
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

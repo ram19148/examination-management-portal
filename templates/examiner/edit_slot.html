@@ -1,0 +1,50 @@
+<!-- templates/examiner/edit_slot.html -->
+<!-- ==============================================================================
+     Empty slot ko modify karne ka form.
+     ============================================================================== -->
+{% extends 'base.html' %}
+{% block title %}Edit Slot - Examiner{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-md-6">
+        <div class="card card-modern">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-1">✏️ Edit Examination Slot</h4>
+                <p class="text-muted small mb-3">{{ slot.examination.course.course_code }} - {{ slot.examination.name }}</p>
+
+                <form method="POST" action="{{ url_for('edit_slot', slot_id=slot.id) }}">
+                    <!-- Date -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Date</label>
+                        <input type="date" name="date" class="form-control" value="{{ slot.date }}" required>
+                    </div>
+
+                    <!-- Time Range -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">Start Time</label>
+                            <input type="time" name="start_time" class="form-control" value="{{ slot.start_time.strftime('%H:%M') }}" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold">End Time</label>
+                            <input type="time" name="end_time" class="form-control" value="{{ slot.end_time.strftime('%H:%M') }}" required>
+                        </div>
+                    </div>
+
+                    <!-- Capacity -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Student Capacity</label>
+                        <input type="number" name="capacity" class="form-control" value="{{ slot.capacity }}" min="1" max="10" required>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary-gradient flex-grow-1">Update Slot</button>
+                        <a href="{{ url_for('examiner_dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

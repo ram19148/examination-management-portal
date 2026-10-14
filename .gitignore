@@ -1,0 +1,22 @@
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*.class
+*.pytest_cache/
+
+# Database & Local Instances
+instance/
+*.db
+*.sqlite3
+
+# Archives
+*.zip
+
+# IDE Settings
+.vscode/
+.idea/

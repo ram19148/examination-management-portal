@@ -1,0 +1,107 @@
+<!-- templates/student/dashboard.html -->
+<!-- ==============================================================================
+     Student Dashboard: Live exam search, available examinations cards,
+     aur booked slots ka status (with cancellation before deadline).
+     ============================================================================== -->
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<!-- Live Search Bar -->
+<div class="card card-modern p-3 mb-4">
+    <form method="GET" action="{{ url_for('student_dashboard') }}" class="row g-2">
+        <div class="col-md-10">
+            <input type="text" name="search" class="form-control" value="{{ search_query }}" placeholder="Search exam name or course code (e.g. CS101, Viva, Demo)...">
+        </div>
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-primary-gradient fw-semibold">Search Exams</button>
+        </div>
+    </form>
+</div>
+
+<!-- ==========================================================================
+     MY BOOKED SLOTS SECTION: Student ke active aur completed bookings
+     ========================================================================== -->
+<div class="card card-modern mb-4">
+    <div class="card-body p-4">
+        <h5 class="fw-bold mb-3">📅 My Booked Slots</h5>
+        {% if bookings %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Exam Title</th>
+                            <th>Examiner</th>
+                            <th>Scheduled Date & Time</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for b in bookings %}
+                            <tr>
+                                <td class="fw-bold">{{ b.slot.examination.name }}</td>
+                                <td>👨‍🏫 {{ b.slot.examiner.full_name }}</td>
+                                <td>
+                                    {{ b.slot.date.strftime('%d %b %Y') }}<br>
+                                    <small class="text-muted">{{ b.slot.start_time.strftime('%I:%M %p') }} - {{ b.slot.end_time.strftime('%I:%M %p') }}</small>
+                                </td>
+                                <td>
+                                    {% if b.status == 'Booked' %}
+                                        <span class="badge bg-primary">Slot Confirmed</span>
+                                    {% elif b.status == 'Completed' %}
+                                        <span class="badge bg-success">Exam Completed</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Cancelled</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if b.status == 'Booked' %}
+                                        <!-- Soft Cancel with Deadline Protection -->
+                                        <a href="{{ url_for('cancel_booking', booking_id=b.id) }}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Kya aap booking cancel karna chahte hain?');">Cancel Booking</a>
+                                    {% elif b.status == 'Completed' %}
+                                        <a href="{{ url_for('student_results') }}" class="btn btn-sm btn-success">View Result</a>
+                                    {% else %}
+                                        <span class="text-muted small">Cancelled</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-light border mb-0 text-muted">Aapne abhi tak koi slot book nahi kiya hai. Niche available exams mein se slot chunein.</div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ==========================================================================
+     AVAILABLE EXAMINATIONS: Active exams jinke slots book kiye ja sakte hain
+     ========================================================================== -->
+<h5 class="fw-bold mb-3">📋 Available Examinations</h5>
+<div class="row g-3">
+    {% for exam in exams %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card card-modern h-100 p-4 d-flex flex-column justify-content-between hover-card">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="badge bg-dark">{{ exam.course.course_code }}</span>
+                        <span class="badge bg-info text-dark">{{ exam.exam_type }}</span>
+                    </div>
+                    <h5 class="fw-bold mb-1">{{ exam.name }}</h5>
+                    <p class="text-muted small mb-3">Duration: {{ exam.duration_minutes }} Min | Max Marks: {{ exam.max_marks }}</p>
+                    <div class="p-2 bg-light rounded small text-muted mb-3">
+                        📅 Booking Window: {{ exam.slot_booking_start.strftime('%d %b') }} - {{ exam.slot_booking_end.strftime('%d %b %Y') }}
+                    </div>
+                </div>
+                <div>
+                    <a href="{{ url_for('book_slot', exam_id=exam.id) }}" class="btn btn-primary-gradient w-100 fw-semibold">
+                        View & Book Slots →
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
